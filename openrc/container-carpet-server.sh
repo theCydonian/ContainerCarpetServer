@@ -1,18 +1,20 @@
 #!/sbin/openrc-run
 
-name="container-gitea-app"
-description="App for Gitea server."
+name="container-carpet-server"
+description="Containerized fabric carpet minecraft server."
 
-pidfolder="/run/containers/gitea/"
-pidfile="/run/containers/gitea/${RC_SVCNAME}.pid"
-cidfile="/run/containers/gitea/${RC_SVCNAME}.ctr-id"
+pidfolder="/run/containers/carpet_server/"
+pidfile="/run/containers/carpet_server/${RC_SVCNAME}.pid"
+cidfile="/run/containers/carpet_server/${RC_SVCNAME}.ctr-id"
+
+volume_path="/home/minecraft/server/" # change to appropriate path
+version="1.19.0"
 
 command="/usr/bin/podman"
 command_args="start"
 stop_args="stop --cidfile ${cidfile}"
 
-command_user="gitea"
-command_group="gitea"
+command_user="minecraft" # change to host user
 
 depend() {
 	want net
@@ -51,19 +53,11 @@ repair() {
           --restart always \
           --detach \
           --tty \
-          --env DB_TYPE=mysql \
-          --env DB_HOST=gitea-db:3306 \
-          --env DB_NAME=gitea \
-          --env DB_USER=gitea \
-          --env DB_PASSWD=password \
-          --volume gitea-data-volume:/var/lib/gitea:Z \
-          --volume gitea-config-volume:/etc/gitea:Z \
-          --network gitea-net \
-          --publish 2222:2222 \
-          --publish 3000:3000 \
-          --label \"io.containers.autoupdate=registry\" \
-          --name gitea-app \
-          docker.io/gitea/gitea:1-rootless"
+          --interactive \
+          --volume ${volume_path}:/server/:U,Z \
+          --publish 25565:25565 \
+          --name carpet-server \
+          container_carpet_server:${version}"
 
     runuser ${command_user} --command="${run_command}"
 }
@@ -75,7 +69,7 @@ start_pre() {
 }
 
 start() {
-    ebegin "Starting container-gitea-app"
+    ebegin "Starting container-carpet-server"
 
     runuser ${command_user} --command="${command} ${command_args} $(cat ${cidfile})"
 
@@ -83,13 +77,17 @@ start() {
 }
 
 stop() {
-    ebegin "Stopping container-gitea-app"
+    ebegin "Stopping container-carpet-server"
+
+    echo "stop" | socat EXEC:"podman attach b12175f68aaf27e1a530b6b8b760c25919d1290c807aabb10dc41a011c4d57e0",pty STDIN
+
+    sleep 5
 
     procs=$(runuser ${command_user} --command="/usr/bin/podman ps -aq --filter id=$(cat ${cidfile})")
 
-      if [ "${procs}" ]; then 
-          runuser ${command_user} --command="${command} ${stop_args}"
-      fi
+    if [ "${procs}" ]; then
+        runuser ${command_user} --command="${command} ${stop_args}"
+    fi
 
     eend $?
 }
