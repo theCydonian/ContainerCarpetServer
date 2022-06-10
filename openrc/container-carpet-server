@@ -1,0 +1,95 @@
+#!/sbin/openrc-run
+
+name="container-gitea-app"
+description="App for Gitea server."
+
+pidfolder="/run/containers/gitea/"
+pidfile="/run/containers/gitea/${RC_SVCNAME}.pid"
+cidfile="/run/containers/gitea/${RC_SVCNAME}.ctr-id"
+
+command="/usr/bin/podman"
+command_args="start"
+stop_args="stop --cidfile ${cidfile}"
+
+command_user="gitea"
+command_group="gitea"
+
+depend() {
+	want net
+	after net.online
+}
+
+check_and_repair() {
+    if [ ! -d ${pidfolder} ]; then
+        mkdir --parents ${pidfolder}
+    fi
+    chown ${command_user}: ${pidfolder}
+    
+    if [ ! -f ${cidfile} ]; then
+        repair
+    else
+        procs=$(runuser ${command_user} --command="/usr/bin/podman ps -aq --filter id=$(cat ${cidfile})")
+
+        if [ ! "${procs}" ]; then 
+            repair
+        fi
+    fi
+}
+
+repair() {
+    if [ -f ${cidfile} ]; then
+        rm ${cidfile}
+    fi
+    if [ -f ${pidfile} ]; then
+        rm ${pidfile}
+    fi
+    run_command="/usr/bin/podman container run \
+          --conmon-pidfile ${pidfile} \
+          --cidfile ${cidfile} \
+          --cgroups=no-conmon \
+          --replace \
+          --restart always \
+          --detach \
+          --tty \
+          --env DB_TYPE=mysql \
+          --env DB_HOST=gitea-db:3306 \
+          --env DB_NAME=gitea \
+          --env DB_USER=gitea \
+          --env DB_PASSWD=password \
+          --volume gitea-data-volume:/var/lib/gitea:Z \
+          --volume gitea-config-volume:/etc/gitea:Z \
+          --network gitea-net \
+          --publish 2222:2222 \
+          --publish 3000:3000 \
+          --label \"io.containers.autoupdate=registry\" \
+          --name gitea-app \
+          docker.io/gitea/gitea:1-rootless"
+
+    runuser ${command_user} --command="${run_command}"
+}
+
+start_pre() {
+    # check for container existance
+    # restart if not.
+    check_and_repair
+}
+
+start() {
+    ebegin "Starting container-gitea-app"
+
+    runuser ${command_user} --command="${command} ${command_args} $(cat ${cidfile})"
+
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping container-gitea-app"
+
+    procs=$(runuser ${command_user} --command="/usr/bin/podman ps -aq --filter id=$(cat ${cidfile})")
+
+      if [ "${procs}" ]; then 
+          runuser ${command_user} --command="${command} ${stop_args}"
+      fi
+
+    eend $?
+}
