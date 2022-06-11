@@ -12,7 +12,7 @@ version="1.19.0"
 
 command="/usr/bin/podman"
 command_args="start"
-stop_args="stop --cidfile ${cidfile}"
+stop_args="stop --cidfile ${cidfile} --time 30"
 
 command_user="minecraft" # change to host user
 
@@ -50,12 +50,12 @@ repair() {
           --cidfile ${cidfile} \
           --cgroups=no-conmon \
           --replace \
-          --restart always \
+          --restart on-failure \
           --detach \
           --tty \
           --interactive \
           --volume ${volume_path}:/server/:U,Z \
-          --publish 25565:25565 \
+          --publish 25565:25565/tcp \
           --name carpet-server \
           container_carpet_server:${version}"
 
@@ -78,10 +78,6 @@ start() {
 
 stop() {
     ebegin "Stopping container-carpet-server"
-
-    echo "stop" | socat EXEC:"podman attach b12175f68aaf27e1a530b6b8b760c25919d1290c807aabb10dc41a011c4d57e0",pty STDIN
-
-    sleep 5
 
     procs=$(runuser ${command_user} --command="/usr/bin/podman ps -aq --filter id=$(cat ${cidfile})")
 

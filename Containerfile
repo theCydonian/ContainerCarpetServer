@@ -24,3 +24,4 @@ RUN chmod +x /bin/entrypoint.sh
 
 USER $USER
 ENTRYPOINT ["/bin/entrypoint.sh"]
+EXPOSE 25565
