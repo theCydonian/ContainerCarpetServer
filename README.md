@@ -120,7 +120,9 @@ tar -czf /path/to/backup/dir/${date}.tar.gz \
 
 ## Useful Tips
 
-1. When configuring your server, run commands under `podman unshare` 
+1. You can set an alternative startup command by placing a startup.sh to be run 
+inside of the volume directory.
+2. When configuring your server, run commands under `podman unshare` 
 for the correct permissions.
 2. You can attach to your running server container with `podman attach -l`.
 3. You can detach from a running container with `ctrl+p` then `ctrl+q`.
