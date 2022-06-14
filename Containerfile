@@ -15,8 +15,6 @@ RUN adduser \
     "$USER"
 
 RUN mkdir /server/
-RUN chown -R $USER: /server/
-RUN usermod -p '*' $USER
 
 # Entrypoint
 COPY entrypoint.sh /bin/entrypoint.sh
