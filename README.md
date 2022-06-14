@@ -57,7 +57,7 @@ podman container run \
 
 3. After populating your volume directory by installing Fabric, Carpet, and 
 Lithium, the container should fail since you have not agreed to the EULA yet. 
-Run `podman unshare nvim <VOLUME PATH>/eula.txt` or replace nvim with your 
+Run `podman unshare vi <VOLUME PATH>/eula.txt` or replace vi with your 
 preferred editor. Once the file is open, replace `eula=false` with `eula=true`. 
 Note: Since the volume directory is now owned by a non-root user inside the 
 container, to modify contained files, any command must follow `podman unshare` 
@@ -102,7 +102,7 @@ For example, to `/etc/crontab`, simply add the following line:
   00 00 *  *  *  /home/minecraft/backup.sh
 ```
 
-At midnight every day this script the backup script will run as root.
+At midnight every day this backup script will run as root.
 
 Change the user to the user you run the container under, and change the script 
 location to where you store the backup script. You can also change the 
