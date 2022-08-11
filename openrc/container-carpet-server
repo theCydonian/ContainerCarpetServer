@@ -8,7 +8,7 @@ pidfile="/run/containers/carpet_server/${RC_SVCNAME}.pid"
 cidfile="/run/containers/carpet_server/${RC_SVCNAME}.ctr-id"
 
 volume_path="/home/minecraft/server/" # change to appropriate path
-version="1.19.2"
+version="latest"
 
 command="/usr/bin/podman"
 command_args="start"

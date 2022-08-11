@@ -1,10 +1,11 @@
 # ContainerCarpetServer
+
 Containerized Servers for Technical Minecraft
 
 ## Introduction
 
 This project aims to provide a system for running a Fabric Minecraft 
-server(with Carpet!) inside of a Podman(or Docker) container for improved 
+server(with Carpet!) inside a Podman(or Docker) container for improved 
 security.
 
 The project is developed for and tested with Podman, but Docker likely works 
@@ -41,7 +42,7 @@ Include group `wheel` to allow temporary root access.
 ### Installation
 
 1. While logged in as a non-root user, pull the Container Image from DockerHub. 
-<br/>`podman pull docker.io/thecydonian/container_carpet_server:1.19.2`<br/>
+<br/>`podman pull docker.io/thecydonian/container_carpet_server:latest`<br/>
 
 2. Run the Container with the following command. Replace `<VOLUME PATH>` with 
 the absolute path to your persistent server files directory 
@@ -52,7 +53,7 @@ podman container run \
           --interactive \
           --volume <VOLUME PATH>:/server/:U,Z \
           --publish 25565:25565/tcp \
-          container_carpet_server:1.19.2
+          container_carpet_server:latest
 ```
 
 3. After populating your volume directory by installing Fabric, Carpet, and 
@@ -123,7 +124,7 @@ tar -czf /path/to/backup/dir/${date}.tar.gz \
 ## Useful Tips
 
 1. You can set an alternative startup command by placing a startup.sh to be run 
-inside of the volume directory.
+inside the volume directory.
 2. When configuring your server, run commands under `podman unshare` 
 for the correct permissions.
 2. You can attach to your running server container with `podman attach -l`.
