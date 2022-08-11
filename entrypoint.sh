@@ -2,12 +2,12 @@
 
 set -e
 
-fabric_url="https://meta.fabricmc.net/v2/versions/loader/1.19/0.14.7/0.11.0/server/jar"
-fabric_jar="fabric-server-mc.1.19-loader.0.14.7-launcher.0.11.0.jar" 
+fabric_url="https://meta.fabricmc.net/v2/versions/loader/1.19.2/0.14.9/0.11.0/server/jar"
+fabric_jar="fabric-server-mc.1.19.2-loader.0.14.9-launcher.0.11.0.jar" 
 
-carpet_url="https://github.com/gnembon/fabric-carpet/releases/download/1.4.79/fabric-carpet-1.19-1.4.79+v220607.jar"
+carpet_url="https://github.com/gnembon/fabric-carpet/releases/download/1.4.83/fabric-carpet-1.19.1-1.4.83+v220727.jar"
 
-lithium_url="https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19-0.8.0/lithium-fabric-mc1.19-0.8.0.jar"
+lithium_url="https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19.2-0.8.3/lithium-fabric-mc1.19.2-0.8.3.jar"
 
 # Server Installation
 if [ -z "$(ls -A /server/)" ]; then

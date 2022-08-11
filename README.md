@@ -16,7 +16,7 @@ This branch aims to support the latest version of Minecraft, but it should not
 be hard to make this work with older versions as well. Feel free to submit a 
 PR to support other versions.
 
-Current Minecraft Version: 1.19.0
+Current Minecraft Version: 1.19.2
 
 ## Installation
 
@@ -41,7 +41,7 @@ Include group `wheel` to allow temporary root access.
 ### Installation
 
 1. While logged in as a non-root user, pull the Container Image from DockerHub. 
-<br/>`podman pull docker.io/thecydonian/container_carpet_server:1.19.0`<br/>
+<br/>`podman pull docker.io/thecydonian/container_carpet_server:1.19.2`<br/>
 
 2. Run the Container with the following command. Replace `<VOLUME PATH>` with 
 the absolute path to your persistent server files directory 
@@ -52,7 +52,7 @@ podman container run \
           --interactive \
           --volume <VOLUME PATH>:/server/:U,Z \
           --publish 25565:25565/tcp \
-          container_carpet_server:1.19.0
+          container_carpet_server:1.19.2
 ```
 
 3. After populating your volume directory by installing Fabric, Carpet, and 
@@ -96,11 +96,13 @@ running:
 Keeping server backups is usually a good idea in case anything goes wrong. We 
 are going to use cronie to perform daily backups.
 
-For example, to `/etc/crontab`, simply add the following line:
+For example, after running `crontab -e`, simply input the following line:
 
 ```
   00 00 *  *  *  /home/minecraft/backup.sh
 ```
+
+Alternatively this can be added to `/etc/crontab`.
 
 At midnight every day this backup script will run as root.
 
@@ -136,6 +138,7 @@ for the correct permissions.
 * [Server configuration](https://minecraft.fandom.com/wiki/Server.properties)
 
 ## Projects Used
+
 * [Fabric](https://fabricmc.net/)
 * [Carpet Mod](https://github.com/gnembon/fabric-carpet)
 * [Lithium](https://github.com/CaffeineMC/lithium-fabric)
