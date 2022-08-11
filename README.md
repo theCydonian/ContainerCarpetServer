@@ -96,11 +96,13 @@ running:
 Keeping server backups is usually a good idea in case anything goes wrong. We 
 are going to use cronie to perform daily backups.
 
-For example, to `/etc/crontab`, simply add the following line:
+For example, after running `crontab -e`, simply input the following line:
 
 ```
   00 00 *  *  *  /home/minecraft/backup.sh
 ```
+
+Alternatively this can be added to `/etc/crontab`.
 
 At midnight every day this backup script will run as root.
 
